@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<html manifest="app.manifest">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no" />
+
+
+    <!-- Стили, необходимые для работы брендинга -->
+    <link rel="stylesheet" media="all" href="//static.wi-fi.ru/brandings/_cacheAssets/branding.css">
+    <script>
+        function onUpdateReady() {
+            window.location.reload();
+        }
+        window.applicationCache.addEventListener('updateready', onUpdateReady);
+        if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+            onUpdateReady();
+        }
+    </script>
+    <!--
+        Скрипт, содержащий конфигурацию
+        Разрешается изменять занчения полей согласно возможным значениям.
+        Запрещено добавлять свои поля, исполняемый код
+     -->
+    <script>
+        window.settings = {
+            // Использование подложки. Значение 'html' указывает на использование
+            // html файла /src/background/index.html в качестве фона.
+            // Если значением является валидный css цвет, он будет использован в качестве фона,
+            // html файл /src/background/index.html будет проигнорирован
+            background: 'html', // возможные значения: 'html' или любой валидный css цвет
+
+            // Указание цвета отдельно для фона шапки
+            header: {
+                backgroundColor: 'transparent' // возможные значения: любой валидный css цвет
+            },
+
+            // Указание цвета отдельно для футера
+            footer:{
+                backgroundColor: 'transparent' // возможные значения: любой валидный css цвет
+            },
+
+            // Стилизация кнопки подключения к интернету
+            joinInternet:{
+                backgroundColor:'#52c0ee', // возможные значения: любой валидный css цвет
+                color: '#fff', // возможные значения: любой валидный css цвет
+                presetArrow: 'white', // возможные значения: 'black', 'white'
+                presetDelimiter: 'white', // возможные значения: 'black', 'white'
+                presetIcon: 'white' // возможные значения: 'black', 'white'
+            },
+
+            // Стилизация кнопки отключения рекламы
+            premium:{
+                backgroundColor:'#000', // возможные значения: любой валидный css цвет
+                color:'#fff', // возможные значения: любой валидный css цвет
+                presetArrow: 'white', // возможные значения: 'black', 'white'
+                presetDelimiter: 'white', // возможные значения: 'black', 'white'
+                presetIcon: 'white' // возможные значения: 'black', 'white'
+            },
+
+            // Цвет кнопки поддержки
+            presetSupportButton:'white', // возможные значения: 'black', 'white'
+
+            // Цвет кнопки смены языка
+            presetLanguageButton:'white', // возможные значения: 'black', 'white'
+
+            // Цвет текста ссылки на оферту
+            presetTermsOfUse:'white' // возможные значения: 'black', 'white'
+        };
+    </script>
+
+    <style>
+        @font-face {
+            font-family: Roboto; /* Имя шрифта */
+            src: url("./font/Roboto-Regular.ttf"); /* Путь к файлу со шрифтом */
+        }
+
+        @font-face {
+            font-family: "Roboto Medium"; /* Имя шрифта */
+            src: url("./font/Roboto-Medium.ttf"); /* Путь к файлу со шрифтом */
+
+        }
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            background: #6E98AB;
+            min-width: 320px;
+            font-family: Roboto, sans-serif;
+        }
+        /* Разместите стили здесь */
+
+        .header {
+            border-bottom: 10px solid #FFE600;
+        }
+        .header__container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header__btn-group {
+
+        }
+
+        .header__btn {
+            padding: 5px 15px;
+            border-radius: 4px;
+            color: #fff;
+            border: solid #ffffff 1px;
+            background: transparent;
+            font-size: 12px;
+        }
+
+        .header__btn > img {
+            width: 14px;
+            height: 8px;
+        }
+
+
+
+        .content-background {
+            position: absolute;
+            top: -10px;
+            right: 50%;
+            height: calc(100vh - 200px);
+        }
+
+        .rotate {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            background: #1E5066;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: white;
+        }
+
+        .rotate_content {
+            padding-top: calc(50vh - 33px);
+            width: 220px;
+            margin: 0 auto;
+        }
+
+        .rotate_content span {
+            font-size: 13px;
+            text-align: left;
+            padding-left: 20px;
+            display: inline-block;
+            padding-top: 3px;
+        }
+
+        .rotate_content img {
+            float: left;
+        }
+
+
+        .content {
+            margin-top: -10px;
+            height: calc(100% - 195px);
+            display: flex;
+            align-items: center;
+        }
+        .content__man {
+            background-image: url("img/main_img.png");
+            background-repeat: no-repeat;
+            background-size: auto 100%;
+            background-position: right;
+            height: 100%;
+            flex-grow: 1;
+        }
+        .content__text {
+            padding: 10px 14px;
+            max-width: 65%;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .content__title {
+            font-size: 17px;
+            line-height: 18px;
+            color: #fff;
+            font-family: "Roboto Medium";
+            margin-bottom: 0;
+
+        }
+        .content__list {
+            padding: 8px 0 7px 30px;
+            list-style: none;
+            margin: 0;
+        }
+
+        .content__list > li {
+            font-size: 12px;
+            line-height: 14px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .content__list > li:before {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 11px;
+            height: 9px;
+            top: 3px;
+            left: -18px;
+            background-image: url("./img/list_icon.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .content__footer {
+
+        }
+
+        .content__mintext {
+            padding: 5px 0;
+            font-size: 5px;
+            line-height: 6px;
+            color: #1E5066;
+        }
+
+        .content__btn {
+            background: #FFE600;
+            display: inline-block;
+            font-size: 10px;
+            line-height: 12px;
+            color: #000000;
+            border-radius: 5px;
+            padding: 9px 22px;
+            text-decoration: none;
+        }
+
+        .footer {
+            height: 150px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1E5066;
+            font-size: 9px;
+            line-height: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .footer__content {
+            width: 265px;
+        }
+
+        .online {
+            display: flex;
+            border: 1px solid #FFDC2E;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+
+        .online__first {
+            background-image: url("img/footer_btn.svg");
+            background-size: 26px;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 55px;
+        }
+        .online__second {
+            font-size: 13px;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 15px 20px 15px 0;
+            border-left: 1px solid #FFDC2E;
+            width: 100%;
+            text-align: center;
+            background-image: url("img/footer_arrow.svg");
+            background-size: 9px;
+            background-repeat: no-repeat;
+            background-position: calc(100% - 10px) center;
+        }
+        @media (min-width: 375px){
+            .content__text {
+                margin-left: -40px;
+            }
+            .content__title {
+                font-size: 24px;
+                line-height: 25px;
+            }
+            .content__list > li {
+                font-size: 15px;
+                line-height: 17px;
+                margin-bottom: 15px;
+            }
+            .content__btn {
+                font-size: 13px;
+                padding: 13px 25px;
+            }
+            .content__mintext {
+                padding-top: 10px;
+            }
+        }
+
+        @media (min-width: 768px){
+            .content__title {
+                font-size: 40px;
+                line-height: 43px;
+            }
+            .content__list {
+                padding-top: 27px;
+            }
+            .content__list > li {
+                font-size: 25px;
+                line-height: 30px;
+            }
+            .content__list > li:before {
+                width: 20px;
+                height: 16px;
+                left: -36px;
+            }
+            .content__btn {
+                font-size: 20px;
+                padding: 18px 35px;
+            }
+            .content__mintext {
+                font-size: 7px;
+                padding-top: 60px;
+            }
+            .footer__content {
+                width: 482px;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            @media screen and (orientation:landscape) {
+                .rotate {
+                    display: block;
+                }
+            }
+        }
+        @media (min-width: 1000px) {
+            @media screen and (orientation: landscape) {
+                .content__text {
+                    align-items: flex-start;
+                }
+
+                .content__man {
+                    background-position: left top;
+                    background-size: 100% auto;
+                }
+
+                .content__list > li {
+                    font-size: 22px;
+                    line-height: 26px;
+                }
+
+                .content__footer {
+                    display: flex;
+                    align-items: center;
+                    padding-left: 30px;
+
+                }
+
+                .content__mintext {
+                    padding: 0;
+                    margin-left: 20px;
+                }
+
+                .header__container {
+                    max-width: 650px;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="rotate">
+        <div class="rotate_content">
+            <img src="./img/rotate.svg" alt=""><span>Пожалуйста переверните <br> устройство</span>
+        </div>
+    </div>
+    <!-- Разместите html разметку здесь -->
+    <header class="header">
+        <div class="header__container">
+            <img src="./img/logo.svg" alt="Tinkoff">
+            <div class="header__btn-group">
+                <button class="header__btn">
+                    Поддержка
+                </button>
+                <button class="header__btn">
+                    <img src="./img/eng.png" alt="">
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="content">
+        <div class="content__man">
+
+        </div>
+        <div class="content__text">
+            <h1 class="content__title">
+                Автострахование
+                <br>с кэшбэком 20%
+            </h1>
+            <div class="content__inner">
+                <ul class="content__list">
+                    <li>
+                        Без лишних
+                        <br>платных опций
+                    </li>
+                    <li>
+                        Учитываем скидки
+                        <br>за безаварийность
+                    </li>
+                    <li>
+                        Всегда под рукой
+                    </li>
+                    <li>
+                        ОСАГО без
+                        <br>визита в офис
+                    </li>
+                </ul>
+                <div class="content__footer">
+                    <a href="#" class="content__btn">Оформить полис</a>
+                    <div class="content__mintext">
+                        АО «Тинькофф Банк», лицензия № 2673.
+                        <br>АО «Тинькофф Страхование», ОГРН 1027739031540.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer__content">
+            Нажимая “Войти в интернет” вы соглашаетесь с пользовательским соглашением
+            <div class="online">
+                <a href="#" class="online__first"></a>
+                <a href="#" class="online__second">Войти в интернет</a>
+            </div>
+        </div>
+    </footer>
+
+
+<!--    <h1>Это шаблон брендинга</h1>-->
+
+<!--    &lt;!&ndash; Пример ссылки перехода с учетом клика &ndash;&gt;-->
+<!--    <a href="http://ya.ru" data-event-click="1">Ссылка</a>-->
+
+<!--    &lt;!&ndash; Пример элемента без перехода, клик по которому требуется учесть &ndash;&gt;-->
+<!--    <div data-event-click="2">Клик</div>-->
+
+<!--    &lt;!&ndash; Пример элемента без перехода, клик по которому вызывает вибрацию &ndash;&gt;-->
+<!--    <a data-event-click="3" data-vibrate-click="[200,100,200,100,200]">Вибрация</a>-->
+
+<!--    &lt;!&ndash; Пример элемента без перехода, клик по которому вызывает вибрацию &ndash;&gt;-->
+<!--    <div data-vibrate-load="[200,100,200,100,200]">Вибрация по загрузке</div>-->
+
+    <!-- Скрипт, необходимый для работы брендинга -->
+    <script src="//static.wi-fi.ru/brandings/_cacheAssets/branding.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        parent.parent.postMessage(JSON.stringify({
+          source: 'branding',
+          type: 'event',
+          eventId: 10,
+          href: null
+        }), '*');
+      });
+    </script>
+</body>
+</html>
